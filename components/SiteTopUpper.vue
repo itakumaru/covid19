@@ -14,8 +14,8 @@
       </div>
     </div>
     <whats-new class="mb-4" :items="newsItems" :is-emergency="false" />
+    <monitoring-comment-card />
     <tokyo-alert-card v-if="TokyoAlert.alert" />
-    <request-suspension-card />
     <static-info
       class="mb-4"
       :url="localePath('/flow')"
@@ -32,7 +32,7 @@ import PageHeader from '@/components/PageHeader.vue'
 import WhatsNew from '@/components/WhatsNew.vue'
 import StaticInfo from '@/components/StaticInfo.vue'
 import TokyoAlertCard from '@/components/TokyoAlertCard.vue'
-import RequestSuspensionCard from '@/components/RequestSuspensionCard.vue'
+import MonitoringCommentCard from '@/components/MonitoringCommentCard.vue'
 import Data from '@/data/data.json'
 import News from '@/data/news.json'
 import TokyoAlert from '@/data/tokyo_alert.json'
@@ -44,7 +44,7 @@ export default Vue.extend({
     WhatsNew,
     StaticInfo,
     TokyoAlertCard,
-    RequestSuspensionCard
+    MonitoringCommentCard,
   },
   data() {
     return {
@@ -52,9 +52,9 @@ export default Vue.extend({
       TokyoAlert,
       headerItem: {
         icon: 'mdi-chart-timeline-variant',
-        title: this.$t('都内の最新感染動向')
+        title: this.$t('都内の最新感染動向'),
       },
-      newsItems: News.newsItems
+      newsItems: News.newsItems,
     }
   },
   computed: {
@@ -63,13 +63,13 @@ export default Vue.extend({
     },
     formattedDateForDisplay() {
       return this.$d(new Date(Data.lastUpdate), 'dateTime')
-    }
+    },
   },
   head(): MetaInfo {
     return {
-      title: this.$t('都内の最新感染動向') as string
+      title: this.$t('都内の最新感染動向') as string,
     }
-  }
+  },
 })
 </script>
 

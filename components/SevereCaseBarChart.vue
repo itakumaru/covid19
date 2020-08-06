@@ -1,5 +1,10 @@
 <template>
-  <data-view :title="title" :title-id="titleId" :date="date">
+  <data-view
+    :title="title"
+    :title-id="titleId"
+    :date="date"
+    :head-title="title + infoTitles.join(',')"
+  >
     <h4 :id="`${titleId}-graph`" class="visually-hidden">
       {{ $t(`{title}のグラフ`, { title }) }}
     </h4>
@@ -29,13 +34,16 @@
       <slot name="additionalDescription" />
     </template>
     <template v-slot:dataTable>
-      <data-view-table :headers="tableHeaders" :items="tableData" />
+      <client-only>
+        <data-view-table :headers="tableHeaders" :items="tableData" />
+      </client-only>
     </template>
-    <template v-slot:infoPanel>
-      <data-view-basic-info-panel
-        :l-text="displayInfo.lText"
-        :s-text="displayInfo.sText"
-        :unit="displayInfo.unit"
+    <template v-slot:dataSetPanel>
+      <data-view-data-set-panel
+        :title="infoTitles[0]"
+        :l-text="displayInfo[0].lText"
+        :s-text="displayInfo[0].sText"
+        :unit="displayInfo[0].unit"
       />
     </template>
   </data-view>
@@ -50,28 +58,28 @@ import { GraphDataType } from '@/utils/formatGraph'
 import DataView from '@/components/DataView.vue'
 import DataViewTable, {
   TableHeader,
-  TableItem
+  TableItem,
 } from '@/components/DataViewTable.vue'
-import DataViewBasicInfoPanel from '@/components/DataViewBasicInfoPanel.vue'
+import DataViewDataSetPanel from '@/components/DataViewDataSetPanel.vue'
 import ScrollableChart from '@/components/ScrollableChart.vue'
 import OpenDataLink from '@/components/OpenDataLink.vue'
 import { DisplayData, yAxesBgPlugin } from '@/plugins/vue-chart'
-
 import { getGraphSeriesStyle } from '@/utils/colors'
+import { calcDayBeforeRatio } from '@/utils/formatDayBeforeRatio'
 
 type Data = {
   canvas: boolean
 }
-type Methods = {
-  formatDayBeforeRatio: (dayBeforeRatio: number) => string
-}
+type Methods = {}
 
 type Computed = {
-  displayInfo: {
-    lText: string
-    sText: string
-    unit: string
-  }
+  displayInfo: [
+    {
+      lText: string
+      sText: string
+      unit: string
+    }
+  ]
   displayData: DisplayData
   displayOption: Chart.ChartOptions
   displayDataHeader: DisplayData
@@ -83,12 +91,12 @@ type Computed = {
 type Props = {
   title: string
   titleId: string
+  infoTitles: string[]
   chartId: string
   chartData: GraphDataType[]
   date: string
   unit: string
   yAxesBgPlugin: Chart.PluginServiceRegistrationOptions[]
-  byDate: boolean
 }
 
 const options: ThisTypedComponentOptionsWithRecordProps<
@@ -104,74 +112,74 @@ const options: ThisTypedComponentOptionsWithRecordProps<
   components: {
     DataView,
     DataViewTable,
-    DataViewBasicInfoPanel,
+    DataViewDataSetPanel,
     ScrollableChart,
-    OpenDataLink
+    OpenDataLink,
   },
   props: {
     title: {
       type: String,
-      default: ''
+      default: '',
     },
     titleId: {
       type: String,
-      default: ''
+      default: '',
+    },
+    infoTitles: {
+      type: Array,
+      default: () => [],
     },
     chartId: {
       type: String,
-      default: 'time-bar-chart'
+      default: 'time-bar-chart',
     },
     chartData: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     date: {
       type: String,
-      required: true
+      required: true,
     },
     unit: {
       type: String,
-      default: ''
+      default: '',
     },
     yAxesBgPlugin: {
       type: Array,
-      default: () => yAxesBgPlugin
+      default: () => yAxesBgPlugin,
     },
-    byDate: {
-      type: Boolean,
-      default: false
-    }
   },
   data: () => ({
-    canvas: true
+    canvas: true,
   }),
   computed: {
     displayInfo() {
-      const lastDay = this.chartData.slice(-1)[0]
-      const lastDayBefore = this.chartData.slice(-2)[0]
-      const dayBeforeRatio = this.formatDayBeforeRatio(
-        lastDay.transition - lastDayBefore.transition
-      )
-      return {
-        lText: `${lastDay.transition.toLocaleString()}`,
-        sText: `${lastDay.label} ${this.$t('の数値')}（${this.$t(
-          '前日比'
-        )}: ${dayBeforeRatio} ${this.unit}）`,
-        unit: this.unit
-      }
+      const { lastDay, lastDayData, dayBeforeRatio } = calcDayBeforeRatio({
+        displayData: this.displayData,
+      })
+      return [
+        {
+          lText: lastDayData,
+          sText: `${this.$t('{date} の数値', {
+            date: lastDay,
+          })}（${this.$t('前日比')}: ${dayBeforeRatio} ${this.unit}）`,
+          unit: this.unit,
+        },
+      ]
     },
     displayData() {
       const style = getGraphSeriesStyle(1)[0]
       return {
-        labels: this.chartData.map(d => d.label),
+        labels: this.chartData.map((d) => d.label),
         datasets: [
           {
-            data: this.chartData.map(d => d.transition),
+            data: this.chartData.map((d) => d.transition),
             backgroundColor: style.fillColor,
             borderColor: style.strokeColor,
-            borderWidth: 1
-          }
-        ]
+            borderWidth: 1,
+          },
+        ],
       }
     },
     displayOption() {
@@ -189,12 +197,12 @@ const options: ThisTypedComponentOptionsWithRecordProps<
             },
             title(tooltipItem, data) {
               return data.labels![tooltipItem[0].index!] as string[]
-            }
-          }
+            },
+          },
         },
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
@@ -202,7 +210,7 @@ const options: ThisTypedComponentOptionsWithRecordProps<
               id: 'day',
               stacked: true,
               gridLines: {
-                display: false
+                display: false,
               },
               ticks: {
                 fontSize: 9,
@@ -210,9 +218,9 @@ const options: ThisTypedComponentOptionsWithRecordProps<
                 fontColor: '#808080',
                 maxRotation: 0,
                 callback: (label: string) => {
-                  return label.split('/')[1]
-                }
-              }
+                  return dayjs(label).format('D')
+                },
+              },
               // #2384: If you set "type" to "time", make sure that the bars at both ends are not hidden.
               // #2384: typeをtimeに設定する時はグラフの両端が見切れないか確認してください
             },
@@ -223,40 +231,39 @@ const options: ThisTypedComponentOptionsWithRecordProps<
                 drawOnChartArea: false,
                 drawTicks: true,
                 drawBorder: false,
-                tickMarkLength: 10
+                tickMarkLength: 10,
               },
               ticks: {
                 fontSize: 11,
                 fontColor: '#808080',
                 padding: 3,
-                fontStyle: 'bold'
+                fontStyle: 'bold',
               },
               type: 'time',
               time: {
                 unit: 'month',
-                parser: 'M/D',
                 displayFormats: {
-                  month: 'MMM'
-                }
-              }
-            }
+                  month: 'MMM',
+                },
+              },
+            },
           ],
           yAxes: [
             {
               stacked: true,
               gridLines: {
                 display: true,
-                color: '#E5E5E5'
+                color: '#E5E5E5',
               },
               ticks: {
                 suggestedMin: 0,
                 maxTicksLimit: 8,
                 fontColor: '#808080',
-                suggestedMax: scaledTicksYAxisMax
-              }
-            }
-          ]
-        }
+                suggestedMax: scaledTicksYAxisMax,
+              },
+            },
+          ],
+        },
       }
       if (this.$route.query.ogp === 'true') {
         Object.assign(options, { animation: { duration: 0 } })
@@ -265,24 +272,24 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     },
     displayDataHeader() {
       return {
-        labels: ['2020/1/1', '2020/1/2'],
+        labels: ['2020-01-01', '2020-01-02'],
         datasets: [
           {
             data: [
-              Math.max(...this.chartData.map(d => d.transition)),
-              Math.min(...this.chartData.map(d => d.transition))
+              Math.max(...this.chartData.map((d) => d.transition)),
+              Math.min(...this.chartData.map((d) => d.transition)),
             ],
             backgroundColor: 'transparent',
-            borderWidth: 0
-          }
-        ]
+            borderWidth: 0,
+          },
+        ],
       }
     },
     displayOptionHeader() {
       const options: Chart.ChartOptions = {
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         tooltips: { enabled: false },
         scales: {
@@ -291,7 +298,7 @@ const options: ThisTypedComponentOptionsWithRecordProps<
               id: 'day',
               stacked: true,
               gridLines: {
-                display: false
+                display: false,
               },
               ticks: {
                 fontSize: 9,
@@ -300,9 +307,9 @@ const options: ThisTypedComponentOptionsWithRecordProps<
                 maxRotation: 0,
                 minRotation: 0,
                 callback: (label: string) => {
-                  return label.split('/')[1]
-                }
-              }
+                  return dayjs(label).format('D')
+                },
+              },
             },
             {
               id: 'month',
@@ -311,7 +318,7 @@ const options: ThisTypedComponentOptionsWithRecordProps<
                 drawOnChartArea: false,
                 drawTicks: false, // true -> false
                 drawBorder: false,
-                tickMarkLength: 10
+                tickMarkLength: 10,
               },
               ticks: {
                 fontSize: 11,
@@ -331,17 +338,17 @@ const options: ThisTypedComponentOptionsWithRecordProps<
                     'Sep',
                     'Oct',
                     'Nov',
-                    'Dec'
+                    'Dec',
                   ]
                   const month = monthStringArry.indexOf(label.split(' ')[0]) + 1
                   return month + '月'
-                }
+                },
               },
               type: 'time',
               time: {
-                unit: 'month'
-              }
-            }
+                unit: 'month',
+              },
+            },
           ],
           yAxes: [
             {
@@ -349,22 +356,22 @@ const options: ThisTypedComponentOptionsWithRecordProps<
               gridLines: {
                 display: true,
                 drawOnChartArea: false,
-                color: '#E5E5E5' // #E5E5E5
+                color: '#E5E5E5', // #E5E5E5
               },
               ticks: {
                 suggestedMin: 0,
                 maxTicksLimit: 8,
-                fontColor: '#808080' // #808080
-              }
-            }
-          ]
+                fontColor: '#808080', // #808080
+              },
+            },
+          ],
         },
-        animation: { duration: 0 }
+        animation: { duration: 0 },
       }
       return options
     },
     scaledTicksYAxisMax() {
-      const values = this.chartData.map(d => d.transition)
+      const values = this.chartData.map((d) => d.transition)
       return Math.max(...values)
     },
     tableHeaders() {
@@ -373,8 +380,8 @@ const options: ThisTypedComponentOptionsWithRecordProps<
         {
           text: `${this.$t('重症患者数')} (${this.$t('日別')})`,
           value: 'transition',
-          align: 'end'
-        }
+          align: 'end',
+        },
       ]
     },
     tableData() {
@@ -382,25 +389,12 @@ const options: ThisTypedComponentOptionsWithRecordProps<
         .map((d, _) => {
           return {
             text: d.label,
-            transition: d.transition.toLocaleString()
+            transition: d.transition.toLocaleString(),
           }
         })
         .sort((a, b) => dayjs(a.text).unix() - dayjs(b.text).unix())
         .reverse()
-    }
-  },
-  methods: {
-    formatDayBeforeRatio(dayBeforeRatio: number): string {
-      const dayBeforeRatioLocaleString = dayBeforeRatio.toLocaleString()
-      switch (Math.sign(dayBeforeRatio)) {
-        case 1:
-          return `+${dayBeforeRatioLocaleString}`
-        case -1:
-          return `${dayBeforeRatioLocaleString}`
-        default:
-          return `${dayBeforeRatioLocaleString}`
-      }
-    }
+    },
   },
   mounted() {
     const barChart = this.$refs.barChart as Vue
@@ -412,7 +406,7 @@ const options: ThisTypedComponentOptionsWithRecordProps<
       canvas.setAttribute('role', 'img')
       canvas.setAttribute('aria-labelledby', labelledbyId)
     }
-  }
+  },
 }
 
 export default Vue.extend(options)

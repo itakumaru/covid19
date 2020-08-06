@@ -13,7 +13,7 @@
       :custom-sort="customSort"
       :footer-props="{
         'items-per-page-options': [15, 30, 50, 100, 200, 300, -1],
-        'items-per-page-text': $t('1ページ当たり')
+        'items-per-page-text': $t('1ページ当たり'),
       }"
       class="cardTable"
     >
@@ -33,7 +33,7 @@
           $t('{itemsLength} 項目中 {pageStart} - {pageStop} ', {
             itemsLength: props.itemsLength,
             pageStart: props.pageStart,
-            pageStop: props.pageStop
+            pageStop: props.pageStop,
           })
         }}
       </template>
@@ -65,11 +65,11 @@
 .cardTable {
   &.v-data-table {
     th {
-      padding: 8px 10px;
-      height: auto;
-      border-bottom: 1px solid $gray-4;
-      color: $gray-2;
-      @include font-size(12);
+      padding: 8px 10px !important;
+      height: auto !important;
+      border-bottom: 1px solid $gray-4 !important;
+      color: $gray-2 !important;
+      @include font-size(12, true);
 
       &.text-center {
         text-align: center;
@@ -83,9 +83,9 @@
           font-weight: normal;
         }
         td {
-          padding: 8px 10px;
-          height: auto;
-          @include font-size(12);
+          padding: 8px 10px !important;
+          height: auto !important;
+          @include font-size(12, true);
 
           &.text-center {
             text-align: center;
@@ -143,27 +143,27 @@ export default Vue.extend({
   props: {
     title: {
       type: String,
-      default: ''
+      default: '',
     },
     titleId: {
       type: String,
-      default: ''
+      default: '',
     },
     chartData: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     date: {
       type: String,
-      default: ''
+      default: '',
     },
     info: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     url: {
       type: String,
-      default: ''
+      default: '',
     },
     customSort: {
       type: Function,
@@ -184,8 +184,8 @@ export default Vue.extend({
           return comparison
         })
         return items
-      }
-    }
+      },
+    },
   },
   mounted() {
     const vTables = this.$refs.displayedTable as Vue
@@ -196,6 +196,6 @@ export default Vue.extend({
     nodes.forEach((table: HTMLElement) => {
       table.setAttribute('tabindex', '0')
     })
-  }
+  },
 })
 </script>

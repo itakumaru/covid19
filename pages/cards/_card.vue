@@ -16,10 +16,12 @@ import AgencyCard from '@/components/cards/AgencyCard.vue'
 import PositiveNumberByDiagnosedDateCard from '@/components/cards/PositiveNumberByDiagnosedDateCard.vue'
 import PositiveRateCard from '@/components/cards/PositiveRateCard.vue'
 import UntrackedRateCard from '@/components/cards/UntrackedRateCard.vue'
-import ConfirmedCasesIncreaseRatioByWeekCard from '@/components/cards/ConfirmedCasesIncreaseRatioByWeekCard.vue'
 import SevereCaseCard from '@/components/cards/SevereCaseCard.vue'
 import HospitalizedNumberCard from '@/components/cards/HospitalizedNumberCard.vue'
-import MonitoringStatusOverviewCard from '@/components/cards/MonitoringStatusOverviewCard.vue'
+import ConsultationAboutFeverNumberCard from '@/components/cards/ConsultationAboutFeverNumberCard.vue'
+import TokyoRulesApplicationNumberCard from '@/components/cards/TokyoRulesApplicationNumberCard.vue'
+import MonitoringItemsOverviewCard from '@/components/cards/MonitoringItemsOverviewCard.vue'
+import { getLinksLanguageAlternative } from '@/utils/i18nUtils'
 
 export default {
   components: {
@@ -37,9 +39,10 @@ export default {
     MetroCard,
     AgencyCard,
     PositiveNumberByDiagnosedDateCard,
-    ConfirmedCasesIncreaseRatioByWeekCard,
     HospitalizedNumberCard,
-    MonitoringStatusOverviewCard
+    ConsultationAboutFeverNumberCard,
+    TokyoRulesApplicationNumberCard,
+    MonitoringItemsOverviewCard,
   },
   data() {
     let title, updatedAt, cardComponent
@@ -80,9 +83,6 @@ export default {
       case 'untracked-rate':
         cardComponent = 'untracked-rate-card'
         break
-      case 'increase-ratio-of-confirmed-cases-by-daily':
-        cardComponent = 'confirmed-cases-increase-ratio-by-week-card'
-        break
       case 'positive-status-severe-case':
         cardComponent = 'severe-case-card'
         break
@@ -92,15 +92,21 @@ export default {
       case 'monitoring-number-of-reports-to-covid19-consultation-desk':
         cardComponent = 'monitoring-consultation-desk-reports-number-card'
         break
-      case 'monitoring-status-overview':
-        cardComponent = 'monitoring-status-overview-card'
+      case 'monitoring-items-overview':
+        cardComponent = 'monitoring-items-overview-card'
+        break
+      case 'number-of-reports-to-consultations-about-fever-in-7119':
+        cardComponent = 'consultation-about-fever-number-card'
+        break
+      case 'number-of-tokyo-rules-applied':
+        cardComponent = 'tokyo-rules-application-number-card'
         break
     }
 
     return {
       cardComponent,
       title,
-      updatedAt
+      updatedAt,
     }
   },
   head() {
@@ -118,45 +124,52 @@ export default {
     )}${this.$t('対策サイト')}`
 
     return {
-      titleTemplate: title => `${this.title || title} | ${defaultTitle}`,
+      titleTemplate: (title) => `${this.title || title} | ${defaultTitle}`,
+      link: [
+        ...getLinksLanguageAlternative(
+          `cards/${this.$route.params.card}`,
+          this.$i18n.locales,
+          this.$i18n.defaultLocale
+        ),
+      ],
       meta: [
         {
           hid: 'og:url',
           property: 'og:url',
-          content: `${url}${this.$route.path}/`
+          content: `${url}${this.$route.path}/`,
         },
         {
           hid: 'og:title',
           property: 'og:title',
-          template: title => `${this.title || title} | ${defaultTitle}`,
-          content: ''
+          template: (title) => `${this.title || title} | ${defaultTitle}`,
+          content: '',
         },
         {
           hid: 'description',
           name: 'description',
-          template: updatedAt =>
+          template: (updatedAt) =>
             `${this.updatedAt || updatedAt} | ${description}`,
-          content: ''
+          content: '',
         },
         {
           hid: 'og:description',
           property: 'og:description',
-          template: updatedAt =>
+          template: (updatedAt) =>
             `${this.updatedAt || updatedAt} | ${description}`,
-          content: ''
+          content: '',
         },
         {
           hid: 'og:image',
           property: 'og:image',
-          content: ogpImage
+          content: ogpImage,
         },
         {
           hid: 'twitter:image',
           name: 'twitter:image',
-          content: ogpImage
-        }
-      ]
+          content: ogpImage,
+        },
+      ],
     }
-  }
+  },
 }
 </script>

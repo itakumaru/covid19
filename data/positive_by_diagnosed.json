@@ -1,5 +1,5 @@
 {
-    "date": "2020\/6\/26 18:15",
+    "date": "2020\/8\/5 20:00",
     "data": [
         {
             "diagnosed_date": "2020-01-23",
@@ -243,7 +243,7 @@
         },
         {
             "diagnosed_date": "2020-03-23",
-            "count": 20
+            "count": 19
         },
         {
             "diagnosed_date": "2020-03-24",
@@ -367,7 +367,7 @@
         },
         {
             "diagnosed_date": "2020-04-23",
-            "count": 114
+            "count": 115
         },
         {
             "diagnosed_date": "2020-04-24",
@@ -591,7 +591,7 @@
         },
         {
             "diagnosed_date": "2020-06-18",
-            "count": 59
+            "count": 61
         },
         {
             "diagnosed_date": "2020-06-19",
@@ -599,7 +599,7 @@
         },
         {
             "diagnosed_date": "2020-06-20",
-            "count": 31
+            "count": 30
         },
         {
             "diagnosed_date": "2020-06-21",
@@ -611,15 +611,175 @@
         },
         {
             "diagnosed_date": "2020-06-23",
-            "count": 50
+            "count": 51
         },
         {
             "diagnosed_date": "2020-06-24",
-            "count": 52
+            "count": 54
         },
         {
             "diagnosed_date": "2020-06-25",
-            "count": 42
+            "count": 53
+        },
+        {
+            "diagnosed_date": "2020-06-26",
+            "count": 68
+        },
+        {
+            "diagnosed_date": "2020-06-27",
+            "count": 53
+        },
+        {
+            "diagnosed_date": "2020-06-28",
+            "count": 64
+        },
+        {
+            "diagnosed_date": "2020-06-29",
+            "count": 49
+        },
+        {
+            "diagnosed_date": "2020-06-30",
+            "count": 70
+        },
+        {
+            "diagnosed_date": "2020-07-01",
+            "count": 103
+        },
+        {
+            "diagnosed_date": "2020-07-02",
+            "count": 127
+        },
+        {
+            "diagnosed_date": "2020-07-03",
+            "count": 138
+        },
+        {
+            "diagnosed_date": "2020-07-04",
+            "count": 131
+        },
+        {
+            "diagnosed_date": "2020-07-05",
+            "count": 98
+        },
+        {
+            "diagnosed_date": "2020-07-06",
+            "count": 82
+        },
+        {
+            "diagnosed_date": "2020-07-07",
+            "count": 98
+        },
+        {
+            "diagnosed_date": "2020-07-08",
+            "count": 258
+        },
+        {
+            "diagnosed_date": "2020-07-09",
+            "count": 231
+        },
+        {
+            "diagnosed_date": "2020-07-10",
+            "count": 221
+        },
+        {
+            "diagnosed_date": "2020-07-11",
+            "count": 201
+        },
+        {
+            "diagnosed_date": "2020-07-12",
+            "count": 104
+        },
+        {
+            "diagnosed_date": "2020-07-13",
+            "count": 155
+        },
+        {
+            "diagnosed_date": "2020-07-14",
+            "count": 173
+        },
+        {
+            "diagnosed_date": "2020-07-15",
+            "count": 298
+        },
+        {
+            "diagnosed_date": "2020-07-16",
+            "count": 305
+        },
+        {
+            "diagnosed_date": "2020-07-17",
+            "count": 299
+        },
+        {
+            "diagnosed_date": "2020-07-18",
+            "count": 238
+        },
+        {
+            "diagnosed_date": "2020-07-19",
+            "count": 139
+        },
+        {
+            "diagnosed_date": "2020-07-20",
+            "count": 217
+        },
+        {
+            "diagnosed_date": "2020-07-21",
+            "count": 246
+        },
+        {
+            "diagnosed_date": "2020-07-22",
+            "count": 397
+        },
+        {
+            "diagnosed_date": "2020-07-23",
+            "count": 290
+        },
+        {
+            "diagnosed_date": "2020-07-24",
+            "count": 251
+        },
+        {
+            "diagnosed_date": "2020-07-25",
+            "count": 192
+        },
+        {
+            "diagnosed_date": "2020-07-26",
+            "count": 109
+        },
+        {
+            "diagnosed_date": "2020-07-27",
+            "count": 241
+        },
+        {
+            "diagnosed_date": "2020-07-28",
+            "count": 272
+        },
+        {
+            "diagnosed_date": "2020-07-29",
+            "count": 456
+        },
+        {
+            "diagnosed_date": "2020-07-30",
+            "count": 403
+        },
+        {
+            "diagnosed_date": "2020-07-31",
+            "count": 473
+        },
+        {
+            "diagnosed_date": "2020-08-01",
+            "count": 359
+        },
+        {
+            "diagnosed_date": "2020-08-02",
+            "count": 213
+        },
+        {
+            "diagnosed_date": "2020-08-03",
+            "count": 243
+        },
+        {
+            "diagnosed_date": "2020-08-04",
+            "count": 208
         }
     ]
 }

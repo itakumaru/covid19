@@ -19,11 +19,13 @@ PATHS = {
     "/cards/positive-rate": (959, 730),
     "/cards/monitoring-number-of-confirmed-cases": (959, 500),
     "/cards/untracked-rate": (959, 500),
-    "/cards/increase-ratio-of-confirmed-cases-by-daily": (959, 500),
     "/cards/positive-status-severe-case": (959, 500),
     "/cards/number-of-hospitalized": (959, 500),
     "/cards/monitoring-number-of-reports-to-covid19-consultation-desk": (959, 500),
     "/cards/monitoring-status-overview": (959, 570),
+    "/cards/number-of-reports-to-consultations-about-fever-in-7119": (959, 500),
+    "/cards/number-of-tokyo-rules-applied": (959, 500),
+    "/cards/monitoring-items-overview": (959, 570),
 }
 
 options = webdriver.ChromeOptions()

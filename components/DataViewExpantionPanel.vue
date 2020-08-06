@@ -8,7 +8,7 @@
           @click="toggleDetails"
         >
           <div class="v-expansion-panel-header__icon">
-            <v-icon left>mdi-chevron-right</v-icon>
+            <v-icon left size="2.4rem">mdi-chevron-right</v-icon>
           </div>
           <span class="expansion-panel-text">{{ $t('テーブルを表示') }}</span>
         </v-expansion-panel-header>
@@ -30,7 +30,7 @@ import { EventBus, TOGGLE_EVENT } from '@/utils/card-event-bus'
 export default Vue.extend({
   data() {
     return {
-      showDetails: false
+      showDetails: false,
     }
   },
   mounted() {
@@ -39,8 +39,8 @@ export default Vue.extend({
   methods: {
     toggleDetails() {
       EventBus.$emit(TOGGLE_EVENT, { dataView: this.$parent })
-    }
-  }
+    },
+  },
 })
 </script>
 

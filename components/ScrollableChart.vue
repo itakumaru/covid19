@@ -13,10 +13,12 @@
 import Vue, { PropType } from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { DisplayData } from '@/plugins/vue-chart'
+import { EventBus, TOGGLE_EVENT } from '@/utils/tab-event-bus.ts'
 
 type Data = {
   chartWidth: number
   timerId: number
+  windowWidth: number
 }
 type Methods = {
   adjustChartWidth: () => void
@@ -41,24 +43,25 @@ const options: ThisTypedComponentOptionsWithRecordProps<
   props: {
     displayData: {
       type: Object as PropType<DisplayData>,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       chartWidth: 300,
-      timerId: 0
+      timerId: 0,
+      windowWidth: 0,
     }
   },
   watch: {
     displayData() {
       this.scrollRightSide()
-    }
+    },
   },
   computed: {
     labelCount() {
       return this.displayData.labels?.length || 0
-    }
+    },
   },
   methods: {
     adjustChartWidth() {
@@ -86,15 +89,25 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     handleResize() {
       clearTimeout(this.timerId)
       this.timerId = window.setTimeout(this.adjustChartWidth, 500)
-    }
+    },
   },
   mounted() {
     this.adjustChartWidth()
-    window.addEventListener('resize', this.handleResize)
+    window.addEventListener('resize', () => {
+      if (window.innerWidth !== this.windowWidth) {
+        this.handleResize()
+      }
+      this.windowWidth = window.innerWidth
+    })
+
+    // タブ変更時にグラフ`width`を再計算する
+    EventBus.$on(TOGGLE_EVENT, () => {
+      setTimeout(() => this.adjustChartWidth())
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize)
-  }
+  },
 }
 
 export default options
@@ -108,15 +121,6 @@ export default options
 
   .scrollable {
     overflow-x: scroll;
-
-    &::-webkit-scrollbar {
-      height: 4px;
-      background-color: rgba(0, 0, 0, 0.01);
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.07);
-    }
   }
 
   .sticky-legend {
